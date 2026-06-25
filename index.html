@@ -1,1 +1,631 @@
-test
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蘭嶼逍遙遊 - 海的盡頭 心的起點</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 引入 Font Awesome Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        ocean: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                        sand: '#fef3c7'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(224, 242, 254, 0.5);
+        }
+
+        /* Tab 按鈕樣式過渡效果 */
+        .tab-btn { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-ocean-50 text-gray-800 font-sans antialiased selection:bg-ocean-500 selection:text-white">
+
+    <!-- 導覽列 -->
+    <nav class="glass-nav fixed w-full z-50 shadow-sm" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <div class="flex-shrink-0 flex flex-col justify-center">
+                    <span class="font-bold text-lg md:text-xl text-ocean-700 tracking-wider flex items-center">
+                        <i class="fa-solid fa-sailboat mr-2 text-ocean-500"></i>政大EMBA玩水社
+                    </span>
+                    <!-- 新增聯絡資訊區塊 -->
+                    <div class="flex items-center text-xs md:text-sm text-gray-500 mt-1 space-x-2 md:space-x-4">
+                        <a href="tel:0918189215" class="hover:text-ocean-600 transition-colors flex items-center bg-gray-100/50 px-2 py-1 rounded-md border border-gray-200">
+                            <i class="fa-solid fa-phone mr-1 text-ocean-400"></i>
+                            <span class="font-medium mr-1 hidden sm:inline">社長 林英作</span>
+                            <span class="font-medium sm:hidden">林英作</span>
+                        </a>
+                        <a href="tel:0917910125" class="hover:text-ocean-600 transition-colors flex items-center bg-gray-100/50 px-2 py-1 rounded-md border border-gray-200">
+                            <i class="fa-solid fa-headset mr-1 text-ocean-400"></i>
+                            <span class="font-medium mr-1 hidden sm:inline">領隊 楊川逸</span>
+                            <span class="font-medium sm:hidden">楊川逸</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <button class="nav-link text-gray-600 hover:text-ocean-600 font-medium transition-colors" data-tab="tab-day1">行程總覽</button>
+                    <button class="nav-link text-gray-600 hover:text-ocean-600 font-medium transition-colors" data-tab="tab-logistics">後勤分組</button>
+                    <button class="nav-link text-ocean-600 hover:text-ocean-800 font-bold transition-colors" data-tab="tab-spots">秘境推薦</button>
+                    <button class="nav-link text-gray-600 hover:text-ocean-600 font-medium transition-colors" data-tab="tab-weather">天氣預報</button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-ocean-600 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button class="nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-ocean-600 hover:bg-ocean-50" data-tab="tab-day1">行程總覽</button>
+                <button class="nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-ocean-600 hover:bg-ocean-50" data-tab="tab-logistics">後勤分組</button>
+                <button class="nav-link block w-full text-left px-3 py-2 rounded-md text-base font-bold text-ocean-600 hover:bg-ocean-50" data-tab="tab-spots">秘境推薦</button>
+                <button class="nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-ocean-600 hover:bg-ocean-50" data-tab="tab-weather">天氣預報</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 區塊 -->
+    <header class="relative pt-16 pb-20 flex content-center items-center justify-center min-h-[50vh] md:min-h-[60vh]">
+        <div class="absolute top-0 w-full h-full bg-center bg-cover" style="background-image: url('https://images.unsplash.com/photo-1588628566587-bf1b57004f14?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+            <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black"></span>
+        </div>
+        <div class="container relative mx-auto">
+            <div class="items-center flex flex-wrap">
+                <div class="w-full lg:w-8/12 px-4 ml-auto mr-auto text-center">
+                    <h1 class="text-white font-black text-4xl md:text-6xl drop-shadow-lg mb-4 tracking-widest">
+                        蘭嶼 LAN YU
+                    </h1>
+                    <p class="mt-2 text-lg md:text-2xl text-gray-100 font-light drop-shadow-md">
+                        海的盡頭，心的起點。<br>走進人與海共生的島嶼，等待你用心去感受。
+                    </p>
+                    <div class="mt-6">
+                        <span class="inline-block py-2 px-6 bg-ocean-500/80 backdrop-blur text-white rounded-full font-medium tracking-widest shadow-lg border border-ocean-400">
+                            2026.06.26 - 06.28
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative pb-16 bg-ocean-50" id="tabs-container">
+        
+        <!-- 分頁控制按鈕列 -->
+        <div class="sticky top-16 z-40 bg-ocean-50/95 backdrop-blur shadow-sm py-4 mb-8">
+            <div class="container mx-auto px-2">
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 overflow-x-auto pb-2 px-2 no-scrollbar">
+                    <button class="tab-btn active whitespace-nowrap bg-ocean-600 text-white shadow-md border border-ocean-600 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-day1">Day 1 行程</button>
+                    <button class="tab-btn whitespace-nowrap bg-white text-ocean-700 hover:bg-ocean-100 border border-ocean-200 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-day2">Day 2 行程</button>
+                    <button class="tab-btn whitespace-nowrap bg-white text-ocean-700 hover:bg-ocean-100 border border-ocean-200 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-day3">Day 3 行程</button>
+                    <button class="tab-btn whitespace-nowrap bg-white text-ocean-700 hover:bg-ocean-100 border border-ocean-200 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-logistics"><i class="fa-solid fa-clipboard-list mr-1"></i>後勤分組</button>
+                    <button class="tab-btn whitespace-nowrap bg-white text-ocean-700 hover:bg-ocean-100 border border-ocean-200 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-spots"><i class="fa-solid fa-map-location-dot mr-1"></i>秘境推薦</button>
+                    <button class="tab-btn whitespace-nowrap bg-white text-ocean-700 hover:bg-ocean-100 border border-ocean-200 px-5 md:px-6 py-2 rounded-full font-bold text-sm md:text-base" data-target="tab-weather"><i class="fa-solid fa-cloud-sun mr-1"></i>天氣預報</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-day1" class="tab-content block animate-fade-in">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-ocean-900 inline-block relative">
+                        Day 1 <span class="text-xl font-normal text-gray-500 ml-2">06/26 (五)</span>
+                        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-ocean-500 rounded"></div>
+                    </h2>
+                    <p class="mt-4 text-gray-600">啟程，前往熱帶島嶼展開冒險</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <!-- Day 1 Item 1 -->
+                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 md:items-start hover:shadow-md transition-shadow">
+                        <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-ocean-100 text-ocean-600">
+                            <i class="fa-solid fa-train text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">自費水上活動 & 自由探險</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4 text-sm md:text-base leading-relaxed">
+                                享用蘭嶼風味午餐（藍の魚餐廳）後。可自費參加：<br>
+                                <strong>A行程：</strong>浮潛 ($600/位) - 專業教練帶覽海底世界。<br>
+                                <strong>B行程：</strong>深潛體驗 ($2600/位) - 揹氣瓶一對一教練帶領。<br>
+                                或騎車自由探險感受悠哉生活。
+                            </p>
+                            <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                                <h4 class="text-amber-800 font-bold text-sm mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> 攻略提醒</h4>
+                                <p class="text-amber-700 text-sm">玩水行程請攜帶泳裝與換洗衣物。強烈建議穿著長袖水母衣物理防曬，避免使用防曬乳傷害珊瑚礁。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 2 Item 3 -->
+                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 md:items-start hover:shadow-md transition-shadow">
+                        <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 text-orange-600">
+                            <i class="fa-solid fa-fire-burner text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">炭烤 BBQ 晚餐 (有一間燒烤總店)</h3>
+                            </div>
+                            <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                                把握蘭嶼的夜晚，在點點星空的陪伴下，與夥伴們一同享用熱鬧豐盛的炭烤 BBQ，伴你入眠。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-day3" class="tab-content hidden animate-fade-in">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-ocean-900 inline-block relative">
+                        Day 3 <span class="text-xl font-normal text-gray-500 ml-2">06/28 (日)</span>
+                        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-ocean-500 rounded"></div>
+                    </h2>
+                    <p class="mt-4 text-gray-600">滿載回憶，快樂賦歸</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <!-- Day 3 Item 1 -->
+                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 md:items-start hover:shadow-md transition-shadow">
+                        <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-600">
+                            <i class="fa-solid fa-mug-hot text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">悠閒島嶼時光</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4 text-sm md:text-base leading-relaxed">
+                                體驗蘭嶼藍，享受悠閒的島嶼生活。享用早餐後，可以把握最後時間去發呆亭吹海風，或是採買特色紀念品。中午享用離島風味餐（椰油灣餐廳）。
+                            </p>
+                            <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                                <h4 class="text-amber-800 font-bold text-sm mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> 攻略提醒</h4>
+                                <p class="text-amber-700 text-sm">離開民宿前，記得再次檢查個人物品是否皆已帶齊。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Day 3 Item 2 -->
+                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 md:items-start hover:shadow-md transition-shadow">
+                        <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-ocean-100 text-ocean-600">
+                            <i class="fa-solid fa-train-subway text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="bg-ocean-100 text-ocean-700 px-3 py-1 rounded-full text-sm font-bold">15:00</span>
+                                <h3 class="text-xl font-bold text-gray-800">搭船回航與火車北上</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4 text-sm md:text-base leading-relaxed">
+                                前往開元港報到，搭乘 15:00 船班返回富岡碼頭。隨後前往台東火車站，搭乘 445次火車 (19:03發車) 返回台北 (23:12抵達)，結束充實美好的蘭嶼行。
+                            </p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=蘭嶼開元港" target="_blank" class="inline-flex items-center text-sm font-medium text-white bg-ocean-500 hover:bg-ocean-600 px-4 py-2 rounded-lg transition-colors">
+                                <i class="fa-solid fa-map-location-dot mr-2"></i>蘭嶼開元港
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-logistics" class="tab-content hidden animate-fade-in">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-ocean-900 inline-block relative">
+                        後勤與分組資訊
+                        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-ocean-500 rounded"></div>
+                    </h2>
+                    <p class="mt-4 text-gray-600">座位表、住宿分房與當地交通分配</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- 交通分配 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-ocean-100">
+                        <h3 class="text-xl font-bold text-ocean-800 mb-4 pb-2 border-b border-gray-100 flex items-center">
+                            <i class="fa-solid fa-motorcycle text-ocean-500 mr-2"></i>當地交通分配
+                        </h3>
+                        <div class="mb-6">
+                            <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">🛵 機車共乘 (2人/車)</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm mt-2">
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">1. 蕭淑雯, 劉昌憫</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">2. 劉悅翔, 張耀娥</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">3. 劉悅揚, 何瑞瑛</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">4. 歐亞平, 劉漢意</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">5. 李慰祖, 吳苑蓉</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">6. 林聖傑, 方修忠</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">7. 許國, 胡素禎</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">8. 楊鴻志, 徐千惠</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">9. 林育澤, 林欣霖</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">10. 林英作, 洪瑞雯</div>
+                                <div class="bg-gray-50 p-2 rounded border border-gray-100">11. 李福來, 高美蓮</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">🚐 箱型車</h4>
+                            <ul class="space-y-2 text-sm mt-2">
+                                <li class="bg-gray-50 p-3 rounded border border-gray-100"><strong>車 1：</strong> 余淑育、馬紹宏、鄧潔明、張祖蕙</li>
+                                <li class="bg-gray-50 p-3 rounded border border-gray-100"><strong>車 2：</strong> 張祖汶、馮震宇、張禎娟、謝永瑜</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 住宿分房 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-ocean-100">
+                        <h3 class="text-xl font-bold text-ocean-800 mb-4 pb-2 border-b border-gray-100 flex items-center">
+                            <i class="fa-solid fa-bed text-ocean-500 mr-2"></i>住宿分房表
+                        </h3>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">🛏️ 二大床</h4>
+                            <div class="flex flex-wrap gap-2 text-sm mt-2">
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">劉漢意, 歐亞平</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">蕭淑雯, 劉悅揚, 劉悅翔, 劉昌憫</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">馬紹宏, 李慰祖</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">馮震宇, 張禎娟</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">張祖蕙, 林欣霖</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">高美蓮, 徐千惠</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">林聖傑, 方修忠</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">🛏️ 一大床</h4>
+                            <div class="flex flex-wrap gap-2 text-sm mt-2">
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">林英作</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">林育澤</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">謝永瑜</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">洪瑞雯</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">吳苑蓉</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">楊鴻志</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">張祖汶</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">胡素禎, 許國</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">余淑育, 鄧潔明</span>
+                                <span class="bg-gray-50 px-3 py-2 rounded border border-gray-100">張耀娥, 何瑞瑛</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 餐廳座位 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-ocean-100">
+                        <h3 class="text-xl font-bold text-ocean-800 mb-4 pb-2 border-b border-gray-100 flex items-center">
+                            <i class="fa-solid fa-utensils text-ocean-500 mr-2"></i>餐廳座位表
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                <span class="font-bold text-ocean-700 block mb-1">第一桌 (10人)：</span>
+                                余淑育、鄧潔明、馬紹宏、張祖汶、林英作、馮震宇、張禎娟、謝永瑜、張祖蕙、洪瑞雲
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                <span class="font-bold text-ocean-700 block mb-1">第二桌 (10人)：</span>
+                                蕭淑雯、張耀娥、劉昌憫、何瑞瑛、劉悅翔、林聖傑、劉悅揚、方修忠、李福來、高美蓮
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                <span class="font-bold text-ocean-700 block mb-1">第三桌 (10人)：</span>
+                                歐亞平、劉漢意、許國、胡素禎、林育澤、李慰祖、吳苑蓉、楊鴻志、徐千惠、林欣霖
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 火車座位 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-ocean-100">
+                        <h3 class="text-xl font-bold text-ocean-800 mb-4 pb-2 border-b border-gray-100 flex items-center">
+                            <i class="fa-solid fa-train text-ocean-500 mr-2"></i>火車資訊
+                        </h3>
+                        <div class="space-y-4 text-sm">
+                            <div>
+                                <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">去程：06/26 (五) 408次 (第11車廂為主)</h4>
+                                <div class="bg-yellow-50 p-2 mb-2 rounded border border-yellow-200 text-yellow-800 font-bold text-center">
+                                    @All 台北車站請注意是：6:50-7:00 東三門集合 領取車票
+                                </div>
+                                <div class="space-y-3 mt-2">
+                                    <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                        <h5 class="font-bold text-ocean-700 mb-1 flex items-center"><i class="fa-solid fa-location-dot mr-2 text-ocean-500"></i>📍 板橋站 (07:06發車) - 4人</h5>
+                                        <p class="text-gray-600 text-sm">林育澤、徐千惠、張祖蕙(2人)</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                        <h5 class="font-bold text-ocean-700 mb-1 flex items-center"><i class="fa-solid fa-location-dot mr-2 text-ocean-500"></i>📍 台北車站 - 06:50-07:00 東三門集合 (11人)</h5>
+                                        <p class="text-gray-600 text-sm">林英作、劉漢意(2人)、馬紹宏、林聖傑、洪瑞霙、余淑育(2人)、林欣霖、何瑞瑛/張耀娥(2人)</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                        <h5 class="font-bold text-ocean-700 mb-1 flex items-center"><i class="fa-solid fa-location-dot mr-2 text-ocean-500"></i>📍 台北車站 - 直接上車/車廂會合 (07:20發車) - 3人</h5>
+                                        <p class="text-gray-600 text-sm">謝永瑜(直接上火車，第6車廂12號)、李福來(搭高鐵，車廂會合)、楊鴻志(搭捷運，車廂會合)</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                        <h5 class="font-bold text-ocean-700 mb-1 flex items-center"><i class="fa-solid fa-location-dot mr-2 text-ocean-500"></i>📍 松山站 (07:27發車) - 10人</h5>
+                                        <p class="text-gray-600 text-sm">馮震宇老師(2人)、蕭淑雯(4人)、胡素禎/許國(2人)、高美蓮、李慰祖</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-gray-100">
+                                <h4 class="font-bold text-gray-700 mb-2 bg-ocean-50 px-3 py-1 rounded inline-block">回程：06/28 (日) 445次</h4>
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100 mt-2">
+                                    <p class="font-bold mb-1">第 1 車廂：</p>
+                                    <p class="text-gray-600 leading-relaxed">李福來, 洪瑞雲, 林英作, 劉悅翔, 劉悅揚, 方修忠, 林聖傑, 蕭淑雯, 劉昌憫, 徐千惠, 高美蓮, 余淑育, 鄧潔明, 何瑞瑛, 張耀娥, 林育澤, 林欣霖, 歐亞平, 劉漢意, 楊鴻志, 吳苑蓉, 馬紹宏, 李慰祖, 胡素禎, 許國, 張祖汶, 張祖蕙, 馮震宇, 張禎娟</p>
+                                    <p class="font-bold mt-2 pt-2 border-t border-gray-200">第 06 車廂： <span class="font-normal text-gray-600">謝永瑜 (40號)</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-spots" class="tab-content hidden animate-fade-in bg-ocean-900 rounded-3xl mx-2 md:mx-auto max-w-7xl pb-16 pt-8 mt-4 shadow-2xl">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold inline-block relative text-white">
+                        輕鬆浮潛與自潛秘境
+                        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-ocean-400 rounded"></div>
+                    </h2>
+                    <p class="mt-6 text-ocean-100 max-w-2xl mx-auto">探索蘭嶼清澈見底的玻璃海，以下是精選的三大潛點介紹與安全須知。</p>
+                </div>
+
+                <!-- 浮潛點 Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-16">
+                    <!-- 潛點 1 -->
+                    <div class="bg-ocean-800 rounded-2xl overflow-hidden border border-ocean-700 flex flex-col h-full">
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="椰油浮潛區" class="w-full h-48 object-cover opacity-90">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center text-white">
+                                <i class="fa-solid fa-fish text-ocean-400 mr-2"></i>椰油浮潛區
+                            </h3>
+                            <p class="text-ocean-100 text-sm mb-4 flex-grow">
+                                位於西側椰油部落往北，極佳天然避風港，不受東北季風影響，深度約10公尺，下水即見豐富珊瑚與小丑魚。
+                            </p>
+                            <div class="bg-red-900/40 border-l-4 border-red-500 p-3 mb-6 rounded-r">
+                                <h4 class="text-red-300 font-bold text-sm mb-1">⚠️ 安全攻略</h4>
+                                <p class="text-red-100 text-xs">切勿游出凹岸右側！外圍為強烈海流區（外礁斷層），極易被水流帶走。</p>
+                            </div>
+                            <a href="https://maps.app.goo.gl/FnPbT1vDPgKdbaMJ9" target="_blank" class="block w-full text-center bg-white text-ocean-900 hover:bg-ocean-100 font-bold py-3 px-4 rounded-xl transition-colors mt-auto">
+                                <i class="fa-solid fa-location-dot mr-2"></i>開啟地圖
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 潛點 2 -->
+                    <div class="bg-ocean-800 rounded-2xl overflow-hidden border border-ocean-700 flex flex-col h-full">
+                        <img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="母雞岩內灣" class="w-full h-48 object-cover opacity-90">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center text-white">
+                                <i class="fa-solid fa-anchor text-ocean-400 mr-2"></i>母雞岩內灣
+                            </h3>
+                            <p class="text-ocean-100 text-sm mb-4 flex-grow">
+                                位於東北角，具廣闊潮間帶與淺裙礁地形。內灣風浪平穩，是深受新手與浮潛遊客歡迎的熱門潛點。
+                            </p>
+                            <div class="bg-yellow-900/40 border-l-4 border-yellow-500 p-3 mb-6 rounded-r">
+                                <h4 class="text-yellow-300 font-bold text-sm mb-1">⚠️ 進階攻略</h4>
+                                <p class="text-yellow-100 text-xs">左前方200m為母雞岩外礁，需頂流踢水。若無長蛙鞋或體力不佳，切勿獨自游往外礁。</p>
+                            </div>
+                            <a href="https://maps.app.goo.gl/Hrp4SJCR76P6Uyer6" target="_blank" class="block w-full text-center bg-white text-ocean-900 hover:bg-ocean-100 font-bold py-3 px-4 rounded-xl transition-colors mt-auto">
+                                <i class="fa-solid fa-location-dot mr-2"></i>開啟地圖
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 潛點 3 -->
+                    <div class="bg-ocean-800 rounded-2xl overflow-hidden border border-ocean-700 flex flex-col h-full">
+                        <img src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="蘭恩文化基金會前" class="w-full h-48 object-cover opacity-90">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold mb-2 flex items-center text-white">
+                                <i class="fa-solid fa-camera text-ocean-400 mr-2"></i>蘭恩基金會前
+                            </h3>
+                            <p class="text-ocean-100 text-sm mb-4 flex-grow">
+                                位於西側漁人部落，知名初階潛點，平均水深5-9公尺。岸邊向外走即見珊瑚礁，運氣好能在海面欣賞飛機起降。
+                            </p>
+                            <div class="bg-ocean-700/60 border-l-4 border-ocean-400 p-3 mb-6 rounded-r">
+                                <h4 class="text-ocean-300 font-bold text-sm mb-1"><i class="fa-solid fa-star mr-1"></i> 打卡攻略</h4>
+                                <p class="text-ocean-100 text-xs">在水深約5公尺的岩石中間，有一個特殊的水下小拱門（海蝕洞）地形，是必拍聖地！</p>
+                            </div>
+                            <a href="https://maps.app.goo.gl/2TFgdZHdoxoKgzMJA" target="_blank" class="block w-full text-center bg-white text-ocean-900 hover:bg-ocean-100 font-bold py-3 px-4 rounded-xl transition-colors mt-auto">
+                                <i class="fa-solid fa-location-dot mr-2"></i>開啟地圖
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 私房推薦區塊 -->
+                <div class="max-w-5xl mx-auto bg-ocean-950/50 p-6 md:p-10 rounded-3xl border border-ocean-800">
+                    <div class="flex items-center justify-center mb-8">
+                        <div class="h-px bg-ocean-700 flex-grow"></div>
+                        <h3 class="text-2xl font-bold px-6 text-yellow-400 tracking-wider">
+                            <i class="fa-solid fa-gem mr-2"></i>達人私房推薦
+                        </h3>
+                        <div class="h-px bg-ocean-700 flex-grow"></div>
+                    </div>
+                    <p class="text-center text-ocean-200 mb-8 text-sm md:text-base">精選必訪地標！點擊地圖一探究竟，解鎖在地隱藏版美食與絕美看海秘境。</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <a href="https://maps.app.goo.gl/2aRCcXFk9Edg529W8" target="_blank" class="group flex items-center bg-ocean-800 hover:bg-yellow-500 hover:text-ocean-900 border border-ocean-600 px-4 py-4 rounded-xl transition-all duration-300 shadow-md">
+                            <div class="bg-ocean-900 group-hover:bg-white text-yellow-400 group-hover:text-ocean-900 w-10 h-10 rounded-full flex items-center justify-center mr-3 transition-colors shrink-0">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white group-hover:text-ocean-900 text-[15px]">人氣排隊美食</h4>
+                                <p class="text-xs opacity-70 text-ocean-200 group-hover:text-ocean-800">開啟 Google Map 導航</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://maps.app.goo.gl/AkgK7tFpn41m8RYS6" target="_blank" class="group flex items-center bg-ocean-800 hover:bg-yellow-500 hover:text-ocean-900 border border-ocean-600 px-4 py-4 rounded-xl transition-all duration-300 shadow-md">
+                            <div class="bg-ocean-900 group-hover:bg-white text-yellow-400 group-hover:text-ocean-900 w-10 h-10 rounded-full flex items-center justify-center mr-3 transition-colors shrink-0">
+                                <i class="fa-solid fa-camera-retro"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white group-hover:text-ocean-900 text-[15px]">絕美海景角落</h4>
+                                <p class="text-xs opacity-70 text-ocean-200 group-hover:text-ocean-800">開啟 Google Map 導航</p>
+                            </div>
+                        </a>
+
+                        <a href="https://maps.app.goo.gl/FvMnDWWBq1ANQw5U6" target="_blank" class="group flex items-center bg-ocean-800 hover:bg-yellow-500 hover:text-ocean-900 border border-ocean-600 px-4 py-4 rounded-xl transition-all duration-300 shadow-md">
+                            <div class="bg-ocean-900 group-hover:bg-white text-yellow-400 group-hover:text-ocean-900 w-10 h-10 rounded-full flex items-center justify-center mr-3 transition-colors shrink-0">
+                                <i class="fa-solid fa-martini-glass"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white group-hover:text-ocean-900 text-[15px]">海島微醺推薦</h4>
+                                <p class="text-xs opacity-70 text-ocean-200 group-hover:text-ocean-800">開啟 Google Map 導航</p>
+                            </div>
+                        </a>
+
+                        <a href="https://maps.app.goo.gl/uKKDZY5EWvo6JmqK7" target="_blank" class="group flex items-center bg-ocean-800 hover:bg-yellow-500 hover:text-ocean-900 border border-ocean-600 px-4 py-4 rounded-xl transition-all duration-300 shadow-md md:col-span-1 sm:col-span-2">
+                            <div class="bg-ocean-900 group-hover:bg-white text-yellow-400 group-hover:text-ocean-900 w-10 h-10 rounded-full flex items-center justify-center mr-3 transition-colors shrink-0">
+                                <i class="fa-solid fa-ice-cream"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white group-hover:text-ocean-900 text-[15px]">隱藏版在地小吃</h4>
+                                <p class="text-xs opacity-70 text-ocean-200 group-hover:text-ocean-800">開啟 Google Map 導航</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://maps.app.goo.gl/BGVgvuK8Z5fHyxgf8" target="_blank" class="group flex items-center bg-ocean-800 hover:bg-yellow-500 hover:text-ocean-900 border border-ocean-600 px-4 py-4 rounded-xl transition-all duration-300 shadow-md md:col-span-1 sm:col-span-2">
+                            <div class="bg-ocean-900 group-hover:bg-white text-yellow-400 group-hover:text-ocean-900 w-10 h-10 rounded-full flex items-center justify-center mr-3 transition-colors shrink-0">
+                                <i class="fa-solid fa-gift"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white group-hover:text-ocean-900 text-[15px]">必逛特色小店</h4>
+                                <p class="text-xs opacity-70 text-ocean-200 group-hover:text-ocean-800">開啟 Google Map 導航</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-weather" class="tab-content hidden animate-fade-in">
+            <div class="container mx-auto px-4 max-w-5xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-ocean-900 inline-block relative">
+                        蘭嶼即時天氣
+                        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-ocean-500 rounded"></div>
+                    </h2>
+                    <p class="mt-4 text-gray-600">隨時掌握風浪與降雨狀況，安心出遊</p>
+                </div>
+                <div class="bg-white p-2 md:p-4 rounded-2xl shadow-md border border-ocean-100 h-[600px] w-full">
+                    <!-- 使用 Windy iframe 嵌入氣象資訊，以蘭嶼座標為中心 -->
+                    <iframe width="100%" height="100%" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=%C2%B0C&metricWind=km/h&zoom=10&overlay=wind&product=ecmwf&level=surface&lat=22.036&lon=121.545" frameborder="0" class="rounded-xl w-full h-full"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-ocean-950 text-ocean-200 py-8 text-center border-t border-ocean-800">
+        <p class="mb-2">政大EMBA玩水社 - 蘭嶼逍遙遊</p>
+        <p class="text-sm opacity-70">2026.06.26 - 06.28 期待與您相見</p>
+    </footer>
+
+    <script>
+        // 核心 Tab 切換邏輯
+        function switchTab(tabId) {
+            // 隱藏所有內容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            // 重置所有按鈕樣式
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-ocean-600', 'text-white', 'shadow-md', 'border-ocean-600');
+                btn.classList.add('bg-white', 'text-ocean-700', 'hover:bg-ocean-100', 'border-ocean-200');
+            });
+
+            // 顯示目標內容
+            const targetContent = document.getElementById(tabId);
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
+            }
+            
+            // 點亮對應按鈕
+            const activeBtn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-ocean-700', 'hover:bg-ocean-100', 'border-ocean-200');
+                activeBtn.classList.add('bg-ocean-600', 'text-white', 'shadow-md', 'border-ocean-600');
+            }
+        }
+
+        // 綁定 Tab 按鈕事件
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget.getAttribute('data-target');
+                switchTab(target);
+                // 平滑滾動到內容區頂部
+                const yOffset = -80; 
+                const element = document.getElementById('tabs-container');
+                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            });
+        });
+
+        // 綁定頂端 Navigation 選單事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetTab = e.currentTarget.getAttribute('data-tab');
+                if (targetTab) {
+                    e.preventDefault();
+                    switchTab(targetTab);
+                    // 關閉手機版選單
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                    // 滾動到標籤區
+                    const yOffset = -80; 
+                    const element = document.getElementById('tabs-container');
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({top: y, behavior: 'smooth'});
+                }
+            });
+        });
+
+        // 手機版選單切換
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
